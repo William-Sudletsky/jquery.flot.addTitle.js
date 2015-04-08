@@ -54,3 +54,8 @@ Would result in three segments:
 "Last_Name: Smith",
 "Gender: Male"
 ```
+#### interLineSpacing
+The interLineSpacing is the amount of pixels of spacing between grid, and the title, as well as between each line of text.
+
+## Margins
+This plugin will update the margin of the grid to make room for the title. If no margin is set, a margin object with a top margin value will be created. If a margin object is specified, the top value may be increased to make room for the title. If the margin is set to an integer, it will increment the integer, making all the margins increase.
