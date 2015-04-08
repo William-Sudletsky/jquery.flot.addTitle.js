@@ -15,9 +15,9 @@ options: {
         grid: {
                 title: {
                         show: false,                    //Whether to show the title.
-                        font: '12px sans-serif',                //The font of the title. ***IMPORTANT: SIZE OF FONT MUST BE IN PX, AND MUST BE THE FIRST NUMBER LISTED!***
+                        font: '12px sans-serif',        //The font of the title. ***IMPORTANT: SIZE OF FONT MUST BE IN PX, AND MUST BE THE FIRST NUMBER LISTED!***
                         color: 'black',                 //The colour of the text.
-                        text: 'This is a Title',                        //The actual contents of the title.
+                        text: 'This is a Title',        //The actual contents of the title.
                         delimiter: ' ',                 //The string delimiter used to create line automatic line breaks.
                         interLineSpacing: 6             //The spacing, in pixels, between the top of the graph and the title, and between each line of text.
                 }
