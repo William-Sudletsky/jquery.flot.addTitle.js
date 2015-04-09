@@ -38,7 +38,7 @@ Set the font of the title.
 Set the text color of the title.
 
 #### text
-The actual text that comprises of the title.
+The actual text that comprises of the title. You can use newline characters (\r\n, \r, \n) to force a text wrap as well.
 
 #### delimiter
 The word wrapping function will use the delimiter to break up the title into segments. The word wrapping function will continually add segments to one line until the title would be larger than the grid, and then will start adding segments to the next line. Use a delimiter other than space if your title contains a repeating delimiter in your title.
@@ -54,6 +54,7 @@ Would result in three segments:
 "Last_Name: Smith",
 "Gender: Male"
 ```
+You may also use newline characters (\r\n, \r, \n) in the text field to force a text wrap.
 #### interLineSpacing
 The interLineSpacing is the amount of pixels of spacing between grid, and the title, as well as between each line of text.
 
