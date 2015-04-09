@@ -49,33 +49,37 @@ options: {
                 /*
                 addText Function
 
-                Writes the text to the canvas, and wraps the text to be within maxWidth, using the delimtier to split the string.
+                Writes the text to the canvas, and wraps the text to be within maxWidth, using the delimtier and newline characters to split the string.
 
-                Returns whether the top margin is too small for the text.
+                Returns the distance between the font and the edge of the plot. The value is negative if the margin is too small, and the font is above the edge of the canvas.
                 */
 
-                function addText(context, text, x, y, maxWidth, spacing, delimiter) {
-                        var words = text.split(delimiter);
-                        var line_so_far = '';
+                function addText(context, text, x, y, maxWidth, spacing, delimiter, fontHeight) {
+                        var words = text.split(/\r\n|\r|\n/g).map(function(value) {
+                                return value.split(delimiter);
+                                });
+                        //alert(JSON.stringify(words));
                         var linesArray = [];
-                        var maxHeight = parseInt(context.font.match(/\d+/)[0]);
-                        for(var n = 0; n < words.length; n++) {
-                                var line = line_so_far + words[n] + delimiter;
-                                var measure = context.measureText(line);
-                                var lineWidth = measure.width;
-                                if (lineWidth > maxWidth && n > 0) {
-                                        linesArray.push(line_so_far);
-                                        line_so_far = words[n] + delimiter;
-                                } else {
-                                    line_so_far = line;
+                        for(var i = 0; i < words.length; i++) {
+                                var line_so_far = '';
+                                for(var j = 0; j < words[i].length; j++) {
+                                        var line = line_so_far + words[i][j] + delimiter;
+                                        var measure = context.measureText(line);
+                                        var lineWidth = measure.width;
+                                        if (lineWidth > maxWidth && j > 0) {
+                                                linesArray.push(line_so_far);
+                                                line_so_far = words[i][j] + delimiter;
+                                        } else {
+                                            line_so_far = line;
+                                        }
                                 }
+                                linesArray.push(line_so_far);
                         }
-                        linesArray.push(line_so_far);
                         linesArray = linesArray.reverse();
                         for (var n = 0; n < linesArray.length; n++) {
                                 context.fillText(linesArray[n], x, (y - ((spacing+maxHeight)*n)));
                         }
-                        return (y - ((spacing+maxHeight)*(linesArray.length - 1))) >= maxHeight;           
+                        return (y - ((spacing+fontHeight)*(linesArray.length - 1))) - fontHeight;
                 }
 
                 /*
@@ -130,25 +134,26 @@ options: {
                                         var marginType = 'undefined';
                                 }
 
-                                if (marginType == 'undefined') {
-                                        options.grid.margin = {};
-                                        options.grid.margin.top = fontHeight + interLineSpacing;
-                                } else if (marginType == 'string') {
+                                if (marginType == 'string') {
                                         options.grid.margin = parseInt(options.grid.margin);
                                         marginType = 'number';
                                 }
 
-
-                                if (!addText(ctx, options.grid.title.text, center, bounds.top - options.grid.title.interLineSpacing, plotWidth, options.grid.title.interLineSpacing, options.grid.title.delimiter)) {
-                                        if (marginType == 'object') {
+                                var heightAboveMargin = addText(ctx, options.grid.title.text, center, bounds.top - options.grid.title.interLineSpacing, plotWidth, options.grid.title.interLineSpacing, options.grid.title.delimiter, fontHeight)
+                                if (heightAboveMargin < 0) {
+                                        if (marginType == 'undefined') {
+                                                options.grid.margin = {};
+                                                options.grid.margin.top = (0 - heightAboveMargin);
+                                                plot.hooks.bindEvents.push(triggerRedraw);
+                                        } else if (marginType == 'object') {
                                                 if (options.grid.margin.hasOwnProperty('top')) {
-                                                        options.grid.margin.top += fontHeight;
+                                                        options.grid.margin.top -= heightAboveMargin;
                                                 } else {
-                                                        options.grid.margin.top = fontHeight;
+                                                        options.grid.margin.top = (0 - heightAboveMargin);
                                                 }
                                                 plot.hooks.bindEvents.push(triggerRedraw);
                                         } else if (marginType == 'number') {
-                                                options.grid.margin += fontHeight;
+                                                options.grid.margin -= heightAboveMargin;  
                                                 plot.hooks.bindEvents.push(triggerRedraw);
                                         }
                                 }
