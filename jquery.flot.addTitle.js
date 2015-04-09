@@ -143,17 +143,17 @@ options: {
                                 if (heightAboveMargin < 0) {
                                         if (marginType == 'undefined') {
                                                 options.grid.margin = {};
-                                                options.grid.margin.top = (0 - heightAboveMargin);
+                                                options.grid.margin.top = (0 - heightAboveMargin + options.grid.title.interLineSpacing);
                                                 plot.hooks.bindEvents.push(triggerRedraw);
                                         } else if (marginType == 'object') {
                                                 if (options.grid.margin.hasOwnProperty('top')) {
-                                                        options.grid.margin.top -= heightAboveMargin;
+                                                        options.grid.margin.top -= heightAboveMargin - options.grid.title.interLineSpacing;
                                                 } else {
-                                                        options.grid.margin.top = (0 - heightAboveMargin);
+                                                        options.grid.margin.top = (0 - heightAboveMargin + options.grid.title.interLineSpacing);
                                                 }
                                                 plot.hooks.bindEvents.push(triggerRedraw);
                                         } else if (marginType == 'number') {
-                                                options.grid.margin -= heightAboveMargin;  
+                                                options.grid.margin -= heightAboveMargin - options.grid.title.interLineSpacing;
                                                 plot.hooks.bindEvents.push(triggerRedraw);
                                         }
                                 }
